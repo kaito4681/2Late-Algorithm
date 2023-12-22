@@ -1,6 +1,3 @@
-//
-// 2023.12.19 1 main
-//
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,18 +28,22 @@ int main(int argc, char **argv) {
     printf("total=%d\n", total);
 
     BT_subsetsum(0, n, total, X, Y);
+
+    free(X);
+    free(Y);
+
+    return 0;
 }
 
 void BT_subsetsum(int level, int n, int total, int *X, int *Y) {
-    int sum, sum1, sum2, i, j;
-	static int f = 0;
+    int sum, i, j;
 
-    if (level + 1 > n) {
+    if (level == n) {
         sum = 0;
         for (i = 0; i < n; i++) {
             sum += Y[i] * X[i];
         }
-        if (sum == total && f == 0) {
+        if (sum == total) {
             printf("Sum of");
             for (j = 0; j < n; j++) {
                 if (Y[j] == 1) {
@@ -51,29 +52,11 @@ void BT_subsetsum(int level, int n, int total, int *X, int *Y) {
             }
             printf(" is %d", total);
             printf("\n");
-			f = 1;
         }
     } else {
-        sum1 = 0;
-        sum2 = 0;
-        for (i = 0; i < n; i++) {
-            if (i < level + 1) {
-                sum1 += Y[i] * X[i];
-                sum2 = sum1;
-            } else {
-                sum2 += X[i];
-            }
-        }
-
-        if (sum1 <= total && sum2 >= total && f == 0) {
-            Y[level+1] = 0;
-            BT_subsetsum(level + 1, n, total, X, Y);
-            Y[level+1] = 1;
-            BT_subsetsum(level + 1, n, total, X, Y);
-        }
+        Y[level] = 0;
+        BT_subsetsum(level + 1, n, total, X, Y);
+        Y[level] = 1;
+        BT_subsetsum(level + 1, n, total, X, Y);
     }
-
-	if(level == 0 && f == 0){
-		printf("There is no subset whose sum is %d\n",total);
-	}
 }
