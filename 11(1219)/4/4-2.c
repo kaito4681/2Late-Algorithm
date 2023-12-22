@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int fibonacci(int n, int f[41]);
+int fibonacci(int n, int *f);
 
 int main(int argc, char *argv[]) {
     int n, i, f[41];
@@ -21,6 +21,10 @@ int main(int argc, char *argv[]) {
         printf("\nFibonacci(%d) = %d\n", n, fibonacci(n, f));
     }
 
+    for (i = 0; i < n; i++) {
+        printf("%d\n", f[i]);
+    }
+
     return 0;
 }
 
@@ -30,18 +34,15 @@ int fibonacci(int n, int *f) {
     } else if (n == 1) {
         return 1;
     } else if (f[n] != -1) {
-        printf("Fibonacci(%d) already calculated = %d\n", n, f[n]);
+        printf("Call: Fibonacci(%d)\n", n);
     } else {
         printf("Call: Fibonacci(%d)\n", n);
-        if (f[n - 1] == -1) {
-            f[n - 1] = fibonacci(n - 1, f);
-            printf("Fibonacci(%d) = %d\n", n - 1, f[n - 1]);
-        }
+        f[n - 1] = fibonacci(n - 1, f);
+        printf("Fibonacci(%d) = %d\n", n - 1, f[n - 1]);
 
-        if (f[n - 2] == -1) {
-            f[n - 2] = fibonacci(n - 2, f);
-            printf("Fibonacci(%d) = %d\n", n - 2, f[n - 2]);
-        }
+        f[n - 2] = fibonacci(n - 2, f);
+        printf("Fibonacci(%d) = %d\n", n - 2, f[n - 2]);
+		
         f[n] = f[n - 1] + f[n - 2];
         printf("Fibonacci(%d) = %d\n", n, f[n]);
     }
