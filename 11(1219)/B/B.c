@@ -1,54 +1,46 @@
-//
-//2023.12.19 B main
-//
 #include <stdio.h>
 #include <stdlib.h>
 
 void recursive(int level, int n, int *binary);
 
-int main(int argc, char **argv){
-  int n;
-  int * binary;
+int main(int argc, char **argv) {
+    int n;
+    int *binary;
 
-  if(argc == 1){
-    fprintf(stderr,"\nUsage : %s input integer.\n",argv[0]);
-    exit(1);
-  }
+    if (argc == 1) {
+        fprintf(stderr, "\nUsage : %s input integer.\n", argv[0]);
+        exit(1);
+    }
 
-  n = atoi(argv[1]);
-  binary = malloc(sizeof(int) * n);
-  recursive(0,n,binary);
+    n = atoi(argv[1]);
+    binary = malloc(sizeof(int) * n);
+    recursive(0, n, binary);
 
-  return 0;
+    free(binary);  // メモリの解放
+
+    return 0;
 }
 
-
-void recursive(int level, int n, int *binary){
-  int max = 1;
-  int i,j,k;
-
-  for(i = 0; i < n; i++){
-    max *= 2;
-  }
-  max -= 1;
-  
-  for(i = 0; i <= max ; i++){
-    k= i;
-    for(j = 0; j < n; j++){
-      binary[j] = k % 2;
-      k /= 2;
+void recursive(int level, int n, int *binary) {
+    int i;
+    if (level == n) {
+        // ビット列が完成したら表示
+        for (i = 0; i < n; i++) {
+            if (binary[i] == 0) {
+                printf("0");
+            } else {
+                printf("1");
+            }
+        }
+        printf("\n");
+        return;
     }
-    
-    for(j = n - 1; j >= 0; j--){
-      if(binary[j] == 0){
-	printf("0");
-      }else{
-	printf("1");
-      }
-    }
-    printf("\n");
-  }
-  
+
+    // ビットを 0 に設定して再帰呼び出し
+    binary[level] = 0;
+    recursive(level + 1, n, binary);
+
+    // ビットを 1 に設定して再帰呼び出し
+    binary[level] = 1;
+    recursive(level + 1, n, binary);
 }
-
-  
