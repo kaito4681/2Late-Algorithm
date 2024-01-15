@@ -75,13 +75,11 @@ NODE *sort_list(NODE *list) {
     } else {
         for (current = list; current != NULL; current = current->next) {
             for (index = current->next; index != NULL; index = index->next) {
-                if (current->frequence < index->frequence) {
-                    // Swap character
+                if (current->frequence > index->frequence) {  
                     temp_c = current->c;
                     current->c = index->c;
                     index->c = temp_c;
 
-                    // Swap frequency
                     temp_freq = current->frequence;
                     current->frequence = index->frequence;
                     index->frequence = temp_freq;
@@ -92,6 +90,7 @@ NODE *sort_list(NODE *list) {
 
     return list;
 }
+
 
 void printlist(NODE *list) {
     while (list != NULL) {
