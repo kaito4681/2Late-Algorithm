@@ -1,8 +1,16 @@
 //
-// 2024.01.09 2 main
+// 2024.01.09 3 main
 //
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef struct node {
+    char c;
+    int frequence;
+    struct node *next;
+    struct node *right;
+    struct node *left;
+} NODE;
 
 int main(int argc, char *argv[]) {
     int num;
@@ -11,6 +19,10 @@ int main(int argc, char *argv[]) {
     void print_frequency(char *, int *, int num);
     int unique(char *array, int *counter, int n);
     int *malloc_counter_array(int n);
+    void printlist(NODE * list);
+    NODE *sort_list(NODE * list);
+    NODE *make_list(char *array, int *counter, int num);
+    NODE *list = NULL;
 
     if (argc != 2) {
         fprintf(stderr, "\nUsage : %s character string \n\n", argv[0]);
@@ -23,8 +35,74 @@ int main(int argc, char *argv[]) {
     counter = malloc_counter_array(num);
     num = unique(argv[1], counter, num);
     print_frequency(argv[1], counter, num);
-
+    list = make_list(argv[1], counter, num);
+    list = sort_list(list);
+    printlist(list);
     return 0;
+}
+
+NODE *make_list(char *array, int *counter, int num) {
+    NODE *root, *current, *new_node;
+    int i;
+
+    root = malloc(sizeof(NODE));
+    current = root;
+    root->c = array[0];
+    root->frequence = counter[0];
+    root->right = NULL;
+    root->left = NULL;
+
+    for (i = 1; i < num; i++) {
+        new_node = malloc(sizeof(NODE));
+        new_node->c = array[i];
+        new_node->frequence = counter[i];
+        new_node->right = NULL;
+        new_node->left = NULL;
+        current->next = new_node;
+        current = new_node;
+    }
+
+    return root;
+}
+
+NODE *sort_list(NODE *list) {
+    NODE *current, *index;
+    char temp_c;
+    int temp_freq;
+
+    if (list == NULL) {
+        return list;
+    } else {
+        for (current = list; current != NULL; current = current->next) {
+            for (index = current->next; index != NULL; index = index->next) {
+                if (current->frequence < index->frequence) {
+                    // Swap character
+                    temp_c = current->c;
+                    current->c = index->c;
+                    index->c = temp_c;
+
+                    // Swap frequency
+                    temp_freq = current->frequence;
+                    current->frequence = index->frequence;
+                    index->frequence = temp_freq;
+                }
+            }
+        }
+    }
+
+    return list;
+}
+
+void printlist(NODE *list) {
+    while (list != NULL) {
+        if ('A' <= list->c && list->c <= 'z') {
+            printf("(%c,%d) ", (int)list->c, list->frequence);
+        } else {
+            printf("(%d,%d) ", (int)list->c, list->frequence);
+        }
+        list = list->next;
+    }
+    printf("\n");
 }
 
 int string_length(char *array) {
@@ -44,9 +122,9 @@ int *malloc_counter_array(int n) {
         exit(1);
     }
 
-	for(i = 0; i  < n; i++){
-		a[i] = 0;
-	}
+    for (i = 0; i < n; i++) {
+        a[i] = 0;
+    }
 
     return a;
 }
@@ -64,11 +142,11 @@ int unique(char *array, int *counter, int n) {
         for (i = 0; i < 256; i++) {
             exist[i] = 0;
         }
-	
-	for (i = 0; array[i] != '\0'; i++) {
-	  original_array[i] = array[i];
+
+        for (i = 0; array[i] != '\0'; i++) {
+            original_array[i] = array[i];
         }
-	
+
         for (i = 0; i < n; i++) {
             if (exist[(unsigned char)array[i]] == 0) {
                 exist[(unsigned char)array[i]] = 1;
